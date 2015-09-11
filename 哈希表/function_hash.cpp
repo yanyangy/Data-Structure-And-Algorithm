@@ -3,7 +3,8 @@
 #include "data_structure.h"
 
 /*
-´´½¨Ò»¸ö²ÛÊıÎªnµÄ¹şÏ£±í
+åˆ›å»ºä¸€ä¸ªæ§½æ•°ä¸ºnçš„å“ˆå¸Œè¡¨
+
 */
 HashTable create_HashTable(int n)
 {
@@ -15,7 +16,7 @@ HashTable create_HashTable(int n)
 		exit(-1);
 	}
 
-	//½«¹şÏ£±íÖÃ¿Õ
+	//å°†å“ˆå¸Œè¡¨ç½®ç©º
 	for(i=0;i<n;i++)
 		hashtable[i].first = NULL;
 //	memset(hashtable,0,sizeof(hashtable));
@@ -24,15 +25,15 @@ HashTable create_HashTable(int n)
 }
 
 /*
-ÔÚ¹şÏ£±íÖĞ²éÕÒÊı¾İdata£¬²éÕÒ³É¹¦Ôò·µ»ØÔÚÁ´±íÖĞµÄÎ»ÖÃ£¬
-²éÕÒ²»³É¹¦Ôò·µ»ØNULL£¬ÆäÖĞ¹şÏ£º¯ÊıÎªH(key)=key%M
+åœ¨å“ˆå¸Œè¡¨ä¸­æŸ¥æ‰¾æ•°æ®dataï¼ŒæŸ¥æ‰¾æˆåŠŸåˆ™è¿”å›åœ¨é“¾è¡¨ä¸­çš„ä½ç½®ï¼Œ
+æŸ¥æ‰¾ä¸æˆåŠŸåˆ™è¿”å›NULLï¼Œå…¶ä¸­å“ˆå¸Œå‡½æ•°ä¸ºH(key)=key%M
 */
 pNode search_HashTable(HashTable hashtable, ElemType data)
 {
 	if(!hashtable)
 		return NULL;
 
-	//¸ÃĞ´·¨°üº¬ÁË³É¹¦Óë²»³É¹¦Á½ÖÖÇé¿ö
+	//è¯¥å†™æ³•åŒ…å«äº†æˆåŠŸä¸ä¸æˆåŠŸä¸¤ç§æƒ…å†µ
 	pNode pCur = hashtable[data%M].first;
 	while(pCur && pCur->data != data)
 		pCur = pCur->next;
@@ -41,16 +42,16 @@ pNode search_HashTable(HashTable hashtable, ElemType data)
 }
 
 /*
-Ïò¹şÏ£±íÖĞ²åÈëÊı¾İdata£¬Èç¹ûdataÒÑ´æÔÚ£¬Ôò·µ»Øfasle£¬
-·ñÔò£¬²åÈë¶ÔÓ¦Á´±íµÄ×îºó²¢·µ»Øtrue£¬ÆäÖĞ¹şÏ£º¯ÊıÎªH(key)=key%M
+å‘å“ˆå¸Œè¡¨ä¸­æ’å…¥æ•°æ®dataï¼Œå¦‚æœdataå·²å­˜åœ¨ï¼Œåˆ™è¿”å›fasleï¼Œ
+å¦åˆ™ï¼Œæ’å…¥å¯¹åº”é“¾è¡¨çš„æœ€åå¹¶è¿”å›trueï¼Œå…¶ä¸­å“ˆå¸Œå‡½æ•°ä¸ºH(key)=key%M
 */
 bool insert_HashTable(HashTable hashtable,ElemType data)
 {
-	//Èç¹ûÒÑ¾­´æÔÚ£¬·µ»Øfalse
+	//å¦‚æœå·²ç»å­˜åœ¨ï¼Œè¿”å›false
 	if(search_HashTable(hashtable,data))
 		return false;
 
-	//·ñÔòÎªdata·ÖÅä¿Õ¼ä
+	//å¦åˆ™ä¸ºdataåˆ†é…ç©ºé—´
 	pNode pNew = (pNode)malloc(sizeof(Node));
 	if(!pNew)
 	{
@@ -60,14 +61,14 @@ bool insert_HashTable(HashTable hashtable,ElemType data)
 	pNew->data = data;
 	pNew->next = NULL;
 
-	//½«½Úµã²åÈëµ½¶ÔÓ¦Á´±íµÄ×îºó
+	//å°†èŠ‚ç‚¹æ’å…¥åˆ°å¯¹åº”é“¾è¡¨çš„æœ€å
 	pNode pCur = hashtable[data%M].first;
-	if(!pCur)	//²åÈëÎ»ÖÃÎªÁ´±íµÚÒ»¸ö½ÚµãµÄÇé¿ö
+	if(!pCur)	//æ’å…¥ä½ç½®ä¸ºé“¾è¡¨ç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„æƒ…å†µ
 		hashtable[data%M].first = pNew;
-	else	//²åÈëÎ»ÖÃ²»ÊÇÁ´±íµÚÒ»¸ö½ÚµãµÄÇé¿ö
-	{	//Ö»ÓĞÓÃpCur->next²Å¿ÉÒÔ½«pNew½ÚµãÁ¬µ½Á´±íÉÏ£¬
-		//ÓÃpCurÁ¬²»µ½Á´±íÉÏ£¬¶øÊÇÁ¬µ½ÁËpCurÉÏ
-		//pCurËäÈ»×îÖÕÖ¸ÏòÁ´±íÖĞµÄÄ³¸ö½Úµã£¬µ«ÊÇËü²¢²»ÔÚÁ´±íÖĞ
+	else	//æ’å…¥ä½ç½®ä¸æ˜¯é“¾è¡¨ç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„æƒ…å†µ
+	{	//åªæœ‰ç”¨pCur->nextæ‰å¯ä»¥å°†pNewèŠ‚ç‚¹è¿åˆ°é“¾è¡¨ä¸Šï¼Œ
+		//ç”¨pCurè¿ä¸åˆ°é“¾è¡¨ä¸Šï¼Œè€Œæ˜¯è¿åˆ°äº†pCurä¸Š
+		//pCurè™½ç„¶æœ€ç»ˆæŒ‡å‘é“¾è¡¨ä¸­çš„æŸä¸ªèŠ‚ç‚¹ï¼Œä½†æ˜¯å®ƒå¹¶ä¸åœ¨é“¾è¡¨ä¸­
 		while(pCur->next)
 			pCur = pCur->next;
 		pCur->next = pNew;
@@ -77,21 +78,21 @@ bool insert_HashTable(HashTable hashtable,ElemType data)
 }
 
 /*
-´Ó¹şÏ£±íÖĞÉ¾³ıÊı¾İdata£¬Èç¹ûdata²»´æÔÚ£¬Ôò·µ»Øfasle£¬
-·ñÔò£¬É¾³ıÖ®²¢·µ»Øtrue£¬ÆäÖĞ¹şÏ£º¯ÊıÎªH(key)=key%M
+ä»å“ˆå¸Œè¡¨ä¸­åˆ é™¤æ•°æ®dataï¼Œå¦‚æœdataä¸å­˜åœ¨ï¼Œåˆ™è¿”å›fasleï¼Œ
+å¦åˆ™ï¼Œåˆ é™¤ä¹‹å¹¶è¿”å›trueï¼Œå…¶ä¸­å“ˆå¸Œå‡½æ•°ä¸ºH(key)=key%M
 */
 bool delete_HashTable(HashTable hashtable,ElemType data)
 {
-	//Èç¹ûÃ»²éÕÒµ½£¬·µ»Øfalse
+	//å¦‚æœæ²¡æŸ¥æ‰¾åˆ°ï¼Œè¿”å›false
 	if(!search_HashTable(hashtable,data))
 		return false;
-	//·ñÔò£¬Ò»¶¨´æÔÚ£¬ÕÒµ½É¾³ıÖ®
+	//å¦åˆ™ï¼Œä¸€å®šå­˜åœ¨ï¼Œæ‰¾åˆ°åˆ é™¤ä¹‹
 	pNode pCur = hashtable[data%M].first;
-	pNode pPre = pCur;	//±»É¾½ÚµãµÄÇ°Ò»¸ö½Úµã,³õÊ¼ÖµÓëpCurÏàÍ¬
-	if(pCur->data == data)	//±»É¾½ÚµãÊÇÁ´±íµÄµÚÒ»¸ö½ÚµãµÄÇé¿ö
+	pNode pPre = pCur;	//è¢«åˆ èŠ‚ç‚¹çš„å‰ä¸€ä¸ªèŠ‚ç‚¹,åˆå§‹å€¼ä¸pCurç›¸åŒ
+	if(pCur->data == data)	//è¢«åˆ èŠ‚ç‚¹æ˜¯é“¾è¡¨çš„ç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„æƒ…å†µ
 		hashtable[data%M].first = pCur->next;
 	else
-	{	//±»É¾½Úµã²»ÊÇµÚÒ»¸ö½ÚµãµÄÇé¿ö
+	{	//è¢«åˆ èŠ‚ç‚¹ä¸æ˜¯ç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„æƒ…å†µ
 		while(pCur && pCur->data != data)
 		{
 			pPre = pCur;
@@ -105,12 +106,12 @@ bool delete_HashTable(HashTable hashtable,ElemType data)
 }
 
 /*
-Ïú»Ù²ÛÊıÎªnµÄ¹şÏ£±í
+é”€æ¯æ§½æ•°ä¸ºnçš„å“ˆå¸Œè¡¨
 */
 void destroy_HashTable(HashTable hashtable,int n)
 {
 	int i;
-	//ÏÈÖğ¸öÁ´±íÊÍ·Å
+	//å…ˆé€ä¸ªé“¾è¡¨é‡Šæ”¾
 	for(i=0;i<n;i++)
 	{
 		pNode pCur = hashtable[i].first;
@@ -123,7 +124,7 @@ void destroy_HashTable(HashTable hashtable,int n)
 			pDel = 0;
 		}
 	}
-	//×îºóÊÍ·Å¹şÏ£±í
+	//æœ€åé‡Šæ”¾å“ˆå¸Œè¡¨
 	free(hashtable);
 	hashtable = 0;
 }
